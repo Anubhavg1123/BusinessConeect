@@ -1,0 +1,14 @@
+{
+  "name": "business-connect-frontend",
+  "version": "1.0.0",
+  "description": "Frontend UI Templates & Interactive Browser Demonstration Server for Business Connect",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "express": "^4.19.2",
+    "express-session": "^1.19.0"
+  }
+}
