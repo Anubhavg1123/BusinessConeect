@@ -15,9 +15,14 @@ foreach ($storagePaths as $path) {
     }
 }
 
-// 2. Set storage and view paths for Laravel
+// 2. Set dynamic cache, storage, and view paths for serverless Laravel
 putenv('APP_STORAGE=/tmp/storage');
 putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
+putenv('APP_PACKAGES_CACHE=/tmp/storage/framework/packages.php');
+putenv('APP_SERVICES_CACHE=/tmp/storage/framework/services.php');
+putenv('APP_CONFIG_CACHE=/tmp/storage/framework/config.php');
+putenv('APP_ROUTES_CACHE=/tmp/storage/framework/routes.php');
+putenv('APP_EVENTS_CACHE=/tmp/storage/framework/events.php');
 
 // 3. Forward request to Laravel entrypoint
 require __DIR__ . '/../public/index.php';
