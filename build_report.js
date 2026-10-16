@@ -1,13 +1,10 @@
 const fs = require('fs');
-const { execSync } = require('child_process');
-
 const logoB64 = fs.readFileSync('E:/business-connect/report_assets/logo_base64.txt', 'utf8').trim();
-
-const html = `<!DOCTYPE html>
+const template = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Business Connect – Mini-Project Report</title>
+  <title>Business Connect &ndash; Mini-Project Report</title>
   <style>
     @page {
       size: A4 portrait;
@@ -33,7 +30,7 @@ const html = `<!DOCTYPE html>
       width: 210mm;
       height: 297mm;
       max-height: 297mm;
-      padding: 14mm 20mm 12mm 20mm;
+      padding: 13mm 20mm 11mm 20mm;
       position: relative;
       page-break-after: always;
       page-break-inside: avoid;
@@ -106,7 +103,7 @@ const html = `<!DOCTYPE html>
       height: 2.2px;
       background-color: #4471C4;
       margin-top: 2.5mm;
-      margin-bottom: 4mm;
+      margin-bottom: 3.5mm;
     }
 
     /* FOOTER */
@@ -138,9 +135,9 @@ const html = `<!DOCTYPE html>
     /* TYPOGRAPHY & SECTIONS */
     .report-title-block {
       text-align: center;
-      margin-bottom: 3.5mm;
+      margin-bottom: 3mm;
       border-bottom: 1px solid #e2e8f0;
-      padding-bottom: 2.5mm;
+      padding-bottom: 2mm;
     }
 
     .project-badge {
@@ -159,7 +156,7 @@ const html = `<!DOCTYPE html>
 
     .project-title {
       font-family: 'Cambria', serif;
-      font-size: 15pt;
+      font-size: 14.5pt;
       font-weight: bold;
       color: #0f2d59;
       margin: 2px 0 4px 0;
@@ -186,18 +183,18 @@ const html = `<!DOCTYPE html>
       color: #1e3a8a;
       border-left: 3.5px solid #4471C4;
       padding-left: 6px;
-      margin-top: 2.5mm;
-      margin-bottom: 2mm;
+      margin-top: 2.2mm;
+      margin-bottom: 1.8mm;
       text-transform: uppercase;
       letter-spacing: 0.2px;
     }
 
     p.academic-text {
-      font-size: 9.4pt;
-      line-height: 1.42;
+      font-size: 9.3pt;
+      line-height: 1.4;
       color: #2d3748;
       text-align: justify;
-      margin: 0 0 2.5mm 0;
+      margin: 0 0 2mm 0;
     }
 
     /* TABLES & CARDS */
@@ -205,8 +202,8 @@ const html = `<!DOCTYPE html>
       width: 100%;
       border-collapse: collapse;
       font-family: 'Calibri', sans-serif;
-      font-size: 8.8pt;
-      margin-bottom: 3mm;
+      font-size: 8.7pt;
+      margin-bottom: 2.5mm;
     }
 
     .tech-table th {
@@ -214,17 +211,17 @@ const html = `<!DOCTYPE html>
       color: #1e293b;
       font-weight: bold;
       text-align: left;
-      padding: 4.5px 8px;
+      padding: 4px 8px;
       border: 1px solid #cbd5e1;
       font-size: 8.5pt;
       text-transform: uppercase;
     }
 
     .tech-table td {
-      padding: 4px 8px;
+      padding: 3.8px 8px;
       border: 1px solid #e2e8f0;
       color: #334155;
-      line-height: 1.32;
+      line-height: 1.3;
     }
 
     .tech-table tr:nth-child(even) td {
@@ -234,17 +231,17 @@ const html = `<!DOCTYPE html>
     .tech-label {
       font-weight: bold;
       color: #1e3a8a;
-      width: 24%;
+      width: 25%;
     }
 
     .tech-value {
-      width: 31%;
+      width: 32%;
       font-weight: 600;
       color: #0f172a;
     }
 
     .tech-role {
-      width: 45%;
+      width: 43%;
       color: #475569;
     }
 
@@ -254,8 +251,8 @@ const html = `<!DOCTYPE html>
       border: 1px solid #cbd5e1;
       border-left: 3.5px solid #2563eb;
       border-radius: 4px;
-      padding: 6px 12px;
-      margin-bottom: 2mm;
+      padding: 5px 12px;
+      margin-bottom: 1.8mm;
     }
 
     .links-card-title {
@@ -271,14 +268,14 @@ const html = `<!DOCTYPE html>
     .link-row {
       display: flex;
       align-items: center;
-      margin: 2.5px 0;
+      margin: 2px 0;
       font-family: 'Calibri', sans-serif;
-      font-size: 9.2pt;
+      font-size: 9.1pt;
     }
 
     .link-tag {
       font-weight: bold;
-      width: 135px;
+      width: 155px;
       color: #334155;
     }
 
@@ -299,15 +296,15 @@ const html = `<!DOCTYPE html>
     .feature-item {
       position: relative;
       padding-left: 13px;
-      margin-bottom: 1.8mm;
-      font-size: 9pt;
-      line-height: 1.34;
+      margin-bottom: 1.6mm;
+      font-size: 8.9pt;
+      line-height: 1.32;
       color: #334155;
       text-align: justify;
     }
 
     .feature-item::before {
-      content: '■';
+      content: '\25A0';
       position: absolute;
       left: 0;
       top: 0;
@@ -325,8 +322,8 @@ const html = `<!DOCTYPE html>
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 4px;
-      padding: 6px 8px;
-      margin-bottom: 2mm;
+      padding: 5px 8px;
+      margin-bottom: 1.8mm;
     }
 
     .arch-grid {
@@ -354,10 +351,18 @@ const html = `<!DOCTYPE html>
     }
 
     .arch-col-desc {
-      font-family: 'Calibri', sans-serif;
-      font-size: 7.8pt;
-      color: #475569;
+      font-size: 8pt;
       line-height: 1.28;
+      color: #475569;
+    }
+
+    .arch-col-desc code {
+      font-family: 'Consolas', monospace;
+      font-size: 7.8pt;
+      background: #f1f5f9;
+      padding: 1px 3px;
+      border-radius: 2px;
+      color: #0f172a;
     }
   </style>
 </head>
@@ -369,12 +374,12 @@ const html = `<!DOCTYPE html>
       <table class="header-table">
         <tr>
           <td class="header-logo-cell">
-            <img class="header-logo" src="data:image/png;base64,${logoB64}" alt="Marwadi University NAAC A+">
+            <img class="header-logo" src="data:image/png;base64,{{LOGO_BASE64}}" alt="Marwadi University NAAC A+">
           </td>
           <td class="header-text-cell">
             <div class="inst-title">FACULTY OF ENGINEERING AND TECHNOLOGY</div>
             <div class="inst-dept">Department of Computer Engineering</div>
-            <div class="inst-course">01CE0528 – WEB DEVELOPMENT WITH PHP</div>
+            <div class="inst-course">01CE0528 &ndash; WEB DEVELOPMENT WITH PHP</div>
           </td>
         </tr>
       </table>
@@ -384,7 +389,7 @@ const html = `<!DOCTYPE html>
     <main class="page-content">
       <div class="report-title-block">
         <div class="project-badge">Academic Mini-Project Report</div>
-        <div class="project-title">Business Connect – A Business Management and Networking Platform</div>
+        <div class="project-title">Business Connect &ndash; A Business Management and Networking Platform</div>
         <div class="project-meta-bar">
           <span><strong>Student:</strong> Anubhav</span>
           <span>|</span>
@@ -400,7 +405,7 @@ const html = `<!DOCTYPE html>
       </p>
 
       <div class="section-heading">2. Verified Technology Stack</div>
-      <p class="academic-text" style="margin-bottom: 2mm;">
+      <p class="academic-text" style="margin-bottom: 1.8mm;">
         The system is constructed with an enterprise-grade Model-View-Controller (MVC) architecture, utilizing high-performance open-source technologies confirmed directly from the active production codebase:
       </p>
 
@@ -416,12 +421,17 @@ const html = `<!DOCTYPE html>
           <tr>
             <td class="tech-label">Backend Framework</td>
             <td class="tech-value">PHP 8.2+ / Laravel 12</td>
-            <td class="tech-role">Core MVC backend, RESTful routing, Eloquent ORM, middleware security, and session management.</td>
+            <td class="tech-role">Core MVC backend, RESTful routing, Eloquent ORM, role middleware, and session lifecycle.</td>
           </tr>
           <tr>
-            <td class="tech-label">Database Engine</td>
-            <td class="tech-value">TiDB Cloud Serverless</td>
-            <td class="tech-role">Distributed MySQL-compatible relational database, strict schema integrity, SSL/TLS encrypted connections.</td>
+            <td class="tech-label">Primary Hosting</td>
+            <td class="tech-value">InfinityFree PHP Hosting</td>
+            <td class="tech-role">Primary production Apache/PHP shared hosting with public/.htaccess routing and file-based sessions.</td>
+          </tr>
+          <tr>
+            <td class="tech-label">Production Database</td>
+            <td class="tech-value">InfinityFree MySQL</td>
+            <td class="tech-role">Relational MySQL database (16 tables, foreign keys, persistent storage); TiDB Cloud as fallback.</td>
           </tr>
           <tr>
             <td class="tech-label">Templating & UI</td>
@@ -434,14 +444,9 @@ const html = `<!DOCTYPE html>
             <td class="tech-role">Semantic layout, mobile-first responsive grid (Bootstrap 5), interactive UI components, dynamic modals.</td>
           </tr>
           <tr>
-            <td class="tech-label">Cloud Hosting</td>
-            <td class="tech-value">Vercel Serverless Platform</td>
-            <td class="tech-role">Serverless edge deployment via dedicated PHP bridge (<code>api/index.php</code>) with automated Git CI/CD.</td>
-          </tr>
-          <tr>
-            <td class="tech-label">Version Control</td>
-            <td class="tech-value">Git & GitHub</td>
-            <td class="tech-role">Distributed source code repository, team versioning, and continuous production deployment pipeline.</td>
+            <td class="tech-label">Fallback & VCS</td>
+            <td class="tech-value">Vercel & Git/GitHub</td>
+            <td class="tech-role">Vercel serverless deployment maintained as secondary fallback; Git/GitHub distributed versioning.</td>
           </tr>
         </tbody>
       </table>
@@ -450,16 +455,20 @@ const html = `<!DOCTYPE html>
       <div class="links-card">
         <div class="links-card-title">Public Access & Production Endpoints</div>
         <div class="link-row">
-          <span class="link-tag">🌐 Live Website:</span>
+          <span class="link-tag">&#127760; Primary Live Website:</span>
+          <span class="link-url"><a href="https://businessconnect.infinityfreeapp.com" target="_blank">https://businessconnect.infinityfreeapp.com</a></span>
+        </div>
+        <div class="link-row">
+          <span class="link-tag">&#9889; Fallback Deployment:</span>
           <span class="link-url"><a href="https://business-connect-one.vercel.app" target="_blank">https://business-connect-one.vercel.app</a></span>
         </div>
         <div class="link-row">
-          <span class="link-tag">💻 GitHub Repository:</span>
+          <span class="link-tag">&#128187; GitHub Repository:</span>
           <span class="link-url"><a href="https://github.com/Anubhavg1123/BusinessConeect" target="_blank">https://github.com/Anubhavg1123/BusinessConeect</a></span>
         </div>
       </div>
-      <p class="academic-text" style="font-size: 8.5pt; color: #64748b; margin-top: 1mm; margin-bottom: 0;">
-        * Note: The production deployment is configured with remote TLS certificate enforcement, zero hard-coded secrets, and environment variable isolation for secure cloud database transactions.
+      <p class="academic-text" style="font-size: 8.5pt; color: #475569; margin-top: 1mm; margin-bottom: 0;">
+        * <strong>Implementation Note:</strong> The application supports user registration, login, role-based access, and persistent database-backed contact and inquiry submissions.
       </p>
     </main>
 
@@ -478,12 +487,12 @@ const html = `<!DOCTYPE html>
       <table class="header-table">
         <tr>
           <td class="header-logo-cell">
-            <img class="header-logo" src="data:image/png;base64,${logoB64}" alt="Marwadi University NAAC A+">
+            <img class="header-logo" src="data:image/png;base64,{{LOGO_BASE64}}" alt="Marwadi University NAAC A+">
           </td>
           <td class="header-text-cell">
             <div class="inst-title">FACULTY OF ENGINEERING AND TECHNOLOGY</div>
             <div class="inst-dept">Department of Computer Engineering</div>
-            <div class="inst-course">01CE0528 – WEB DEVELOPMENT WITH PHP</div>
+            <div class="inst-course">01CE0528 &ndash; WEB DEVELOPMENT WITH PHP</div>
           </td>
         </tr>
       </table>
@@ -511,11 +520,11 @@ const html = `<!DOCTYPE html>
         </li>
         <li class="feature-item">
           <span class="feature-title">Authentication & Role-Based Account Registration:</span>
-          Features dedicated portal interfaces for customer registration, business owner onboarding, and administrative credentials. Implements secure session handling, CSRF defense tokens, and encrypted password hashing via standard PHP/Laravel cryptographic hashing.
+          Features dedicated portal interfaces for customer registration, business owner onboarding, and administrative credentials. Implements secure session handling, CSRF defense tokens, role-based middleware guards (customer, business owner, admin), and encrypted password hashing.
         </li>
         <li class="feature-item">
           <span class="feature-title">Database-Backed Records & Persistent Storage:</span>
-          Implements normalized relational persistence across key entities including users, businesses, business categories, products, services, customer reviews, and customer inquiries, with referential integrity enforced on TiDB Cloud.
+          Implements normalized relational persistence across key entities including users, businesses, business categories, products, services, customer reviews, and customer inquiries, with referential integrity enforced on production MySQL.
         </li>
         <li class="feature-item">
           <span class="feature-title">Responsive Interface & Adaptive Navigation:</span>
@@ -535,13 +544,13 @@ const html = `<!DOCTYPE html>
           <div class="arch-col">
             <div class="arch-col-title">Application Tier</div>
             <div class="arch-col-desc">
-              Laravel 12 controllers managing HTTP routing, validation, session lifecycle, and serverless execution via Vercel's <code>api/index.php</code> bridge.
+              Laravel 12 controllers managing HTTP routing, validation, role middleware authorization, session lifecycle, and Apache <code>.htaccess</code> rewriting on InfinityFree.
             </div>
           </div>
           <div class="arch-col">
             <div class="arch-col-title">Data Tier</div>
             <div class="arch-col-desc">
-              Remote TiDB Cloud Serverless instance executing MySQL 8.0 queries via TLS/SSL encrypted connection pool with zero plain-text credential exposure.
+              Production InfinityFree MySQL database executing relational queries with full schema integrity, with remote TiDB Cloud retained as a secondary fallback.
             </div>
           </div>
         </div>
@@ -549,7 +558,7 @@ const html = `<!DOCTYPE html>
 
       <div class="section-heading">6. Project Evaluation & Conclusion</div>
       <p class="academic-text">
-        The <strong>Business Connect</strong> mini-project successfully validates the practical design and deployment of a full-stack, enterprise-grade web application using PHP and Laravel 12. By addressing the real-world challenge of local business visibility and digital networking, the platform demonstrates rigorous Model-View-Controller architectural organization, relational database design with remote cloud clustering, and production serverless deployment. All core functionalities—including directory indexing, product/service discovery, authenticated registration, and persistent inquiry processing—operate seamlessly across mobile and desktop environments. The project bridges academic software engineering concepts with industry-standard deployment practices, providing a secure, scalable foundation for digital business networking.
+        The <strong>Business Connect</strong> mini-project successfully validates the practical design and deployment of a full-stack, enterprise-grade web application using PHP and Laravel 12. By addressing the real-world challenge of local business visibility and digital networking, the platform demonstrates rigorous Model-View-Controller architectural organization, relational database design with production MySQL hosting on InfinityFree, and secondary serverless fallback readiness. All core functionalities&mdash;including directory indexing, product/service discovery, authenticated registration, role authorization, and persistent inquiry processing&mdash;operate seamlessly across mobile and desktop environments. The project bridges academic software engineering concepts with industry-standard deployment practices, providing a secure, scalable foundation for digital business networking.
       </p>
 
       <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 4px; padding: 4px 8px; margin-top: 1mm;">
@@ -557,9 +566,9 @@ const html = `<!DOCTYPE html>
           Academic Verification Summary
         </div>
         <div style="font-family: 'Calibri', sans-serif; font-size: 8pt; color: #2563eb; display: flex; justify-content: space-between; margin-top: 2px;">
-          <span>✔ Codebase Integrity: Verified (Laravel 12 / PHP 8.2+)</span>
-          <span>✔ Database Persistence: Verified (TiDB Cloud MySQL)</span>
-          <span>✔ Live Deployment: Verified (Vercel Edge)</span>
+          <span>&#10004; Codebase Integrity: Verified (Laravel 12 / PHP 8.2+)</span>
+          <span>&#10004; Database Persistence: Verified (Production MySQL)</span>
+          <span>&#10004; Live Deployment: Verified (InfinityFree Primary / Vercel Fallback)</span>
         </div>
       </div>
     </main>
@@ -576,6 +585,6 @@ const html = `<!DOCTYPE html>
 </body>
 </html>
 `;
-
-fs.writeFileSync('E:/business-connect/report.html', html, 'utf8');
+const renderedHtml = template.replaceAll('{{LOGO_BASE64}}', logoB64);
+fs.writeFileSync('E:/business-connect/report.html', renderedHtml, 'utf8');
 console.log('Successfully updated E:/business-connect/report.html');
