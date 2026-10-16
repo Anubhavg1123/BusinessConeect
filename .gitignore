@@ -46,3 +46,10 @@ Thumbs.db
 
 .vercel
 .env*
+
+*.sqlite
+*.sqlite-journal
+
+
+infinityfree_config.json
+

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BusinessController;
@@ -16,6 +17,7 @@ use App\Models\BusinessCategory;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\Review;
+use App\Models\ContactMessage;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,14 +61,15 @@ Route::get('/contact', function () {
 })->name('contact');
 
 Route::post('/contact', function (\Illuminate\Http\Request $request) {
-    $request->validate([
-        'name' => 'required|string',
-        'email' => 'required|email',
-        'subject' => 'required|string',
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'phone' => 'nullable|string|max:30',
+        'subject' => 'required|string|max:255',
         'message' => 'required|string',
     ]);
-    \App\Models\ContactMessage::create($request->all());
-    return back()->with('success', 'Message sent! We will contact you soon.');
+    ContactMessage::create($validated);
+    return back()->with('success', 'Thank you! Your message has been sent successfully. We will contact you soon.');
 })->name('contact.store');
 
 // Search Autosuggest API
@@ -90,16 +93,16 @@ Route::post('/review/send', [ReviewController::class, 'store'])->name('review.st
 Route::post('/review/{id}/like', [ReviewController::class, 'like'])->name('review.like');
 Route::post('/review/{id}/report', [ReviewController::class, 'report'])->name('review.report');
 
-// Customer Dashboard Routes
-Route::middleware(['auth'])->prefix('customer')->name('customer.')->group(function () {
+// Customer Dashboard Routes - Protected by Auth & Customer Role
+Route::middleware(['auth', 'role:customer'])->prefix('customer')->name('customer.')->group(function () {
     Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('dashboard');
     Route::get('/favorites', [CustomerController::class, 'favorites'])->name('favorites');
     Route::post('/favorite/toggle/{businessId}', [CustomerController::class, 'toggleFavorite'])->name('favorite.toggle');
     Route::get('/inquiries', [CustomerController::class, 'inquiries'])->name('inquiries');
 });
 
-// Business Owner Dashboard Routes
-Route::middleware(['auth'])->prefix('business')->name('business.')->group(function () {
+// Business Owner Dashboard Routes - Protected by Auth & Business Owner Role
+Route::middleware(['auth', 'role:business_owner'])->prefix('business')->name('business.')->group(function () {
     Route::get('/dashboard', [BusinessController::class, 'dashboard'])->name('dashboard');
     Route::get('/profile/edit', [BusinessController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile/update', [BusinessController::class, 'updateProfile'])->name('profile.update');
@@ -123,8 +126,8 @@ Route::middleware(['auth'])->prefix('business')->name('business.')->group(functi
     Route::post('/inquiries/{id}/reply', [InquiryController::class, 'reply'])->name('inquiries.reply');
 });
 
-// Admin Panel Routes
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+// Admin Panel Routes - Protected by Auth & Admin Role
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/businesses', [AdminController::class, 'businesses'])->name('businesses');
     Route::post('/businesses/{id}/approve', [AdminController::class, 'approveBusiness'])->name('businesses.approve');

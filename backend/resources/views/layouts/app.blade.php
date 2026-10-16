@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Business Connect – Business Management & Networking Platform')</title>
+    <title>@yield('title', 'Business Connect â€“ Business Management & Networking Platform')</title>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -112,6 +112,41 @@
         </div>
     @endif
 
+    @if(session('info'))
+        <div class="container mt-3">
+            <div class="alert alert-info alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert">
+                <i class="bi bi-info-circle-fill me-2"></i> {{ session('info') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    @endif
+
+    @if(session('warning'))
+        <div class="container mt-3">
+            <div class="alert alert-warning alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert">
+                <i class="bi bi-exclamation-circle-fill me-2"></i> {{ session('warning') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="container mt-3">
+            <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert">
+                <div class="d-flex align-items-center mb-1">
+                    <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                    <strong>Please correct the following errors:</strong>
+                </div>
+                <ul class="mb-0 ps-4 small">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    @endif
+
     <!-- Main Content Area -->
     <main>
         @yield('content')
@@ -169,3 +204,4 @@
     <script src="/js/app.js"></script>
 </body>
 </html>
+

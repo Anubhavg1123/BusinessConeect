@@ -11,6 +11,10 @@ class ServiceController extends Controller
     public function index()
     {
         $business = Auth::user()->business;
+        if (!$business) {
+            return redirect()->route('business.profile.edit')->with('info', 'Please set up your business profile before managing services.');
+        }
+
         $services = Service::where('business_id', $business->id)->latest()->get();
         return view('business.services', compact('services'));
     }
@@ -18,6 +22,9 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $business = Auth::user()->business;
+        if (!$business) {
+            return redirect()->route('business.profile.edit')->with('error', 'Please set up your business profile first.');
+        }
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -36,7 +43,12 @@ class ServiceController extends Controller
 
     public function update(Request $request, $id)
     {
+        $business = Auth::user()->business;
         $service = Service::findOrFail($id);
+
+        if (!$business || $service->business_id !== $business->id) {
+            abort(403, 'Unauthorized action: You do not own this service.');
+        }
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -53,7 +65,13 @@ class ServiceController extends Controller
 
     public function destroy($id)
     {
+        $business = Auth::user()->business;
         $service = Service::findOrFail($id);
+
+        if (!$business || $service->business_id !== $business->id) {
+            abort(403, 'Unauthorized action: You do not own this service.');
+        }
+
         $service->delete();
 
         return back()->with('success', 'Service deleted!');

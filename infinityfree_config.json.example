@@ -1,0 +1,11 @@
+
+  "APP_URL": "http://your-subdomain.infinityfreeapp.com",
+  "DB_HOST": "sqlXXX.infinityfree.com",
+  "DB_DATABASE": "if0_XXXXXXXX_business_connect",
+  "DB_USERNAME": "if0_XXXXXXXX",
+  "DB_PASSWORD": "your_infinityfree_vpanel_password",
+  "FTP_HOST": "ftpupload.net",
+  "FTP_USERNAME": "if0_XXXXXXXX",
+  "FTP_PASSWORD": "your_infinityfree_ftp_password",
+  "FTP_PORT": 21
+}

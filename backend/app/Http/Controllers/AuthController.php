@@ -31,26 +31,26 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users,email',
             'phone' => 'required|string|max:20',
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 
-        $role = Role::where('name', 'business_owner')->first();
+        $role = Role::firstOrCreate(['name' => 'business_owner'], ['label' => 'Business Owner']);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
             'role_id' => $role->id,
             'status' => 'active',
         ]);
 
-        // Auto-initialize business profile
+        // Auto-initialize associated business record
         Business::create([
             'user_id' => $user->id,
-            'name' => $user->name . " Business",
+            'name' => $user->name . " Enterprise",
             'owner_name' => $user->name,
             'email' => $user->email,
             'phone' => $user->phone,
@@ -58,56 +58,68 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
+        $request->session()->regenerate();
 
-        return redirect()->route('business.dashboard')->with('success', 'Account created! Please complete your business profile.');
+        return redirect()->route('business.dashboard')->with('success', 'Business account created! Please complete your business profile.');
     }
 
     public function registerCustomer(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users,email',
             'phone' => 'required|string|max:20',
-            'password' => ['required', Password::defaults()],
+            'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 
-        $role = Role::where('name', 'customer')->first();
+        $role = Role::firstOrCreate(['name' => 'customer'], ['label' => 'Customer']);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
             'role_id' => $role->id,
             'status' => 'active',
         ]);
 
         Auth::login($user);
+        $request->session()->regenerate();
 
-        return redirect()->route('customer.dashboard')->with('success', 'Welcome to Business Connect!');
+        return redirect()->route('customer.dashboard')->with('success', 'Welcome to Business Connect! Your account has been created.');
     }
 
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+            'email' => 'required|string|email',
+            'password' => 'required|string',
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
-            $user = Auth::user();
+        // Check if user exists and verify account status
+        $user = User::where('email', $credentials['email'])->first();
+        if ($user && $user->status !== 'active') {
+            return back()
+                ->withInput($request->only('email', 'remember'))
+                ->withErrors(['email' => 'Your account is currently ' . $user->status . '. Please contact support.']);
+        }
 
-            if ($user->isAdmin()) {
+        if (Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']], $request->boolean('remember'))) {
+            $request->session()->regenerate();
+            $authUser = Auth::user();
+
+            if ($authUser->isAdmin()) {
                 return redirect()->intended(route('admin.dashboard'));
-            } elseif ($user->isBusinessOwner()) {
+            } elseif ($authUser->isBusinessOwner()) {
                 return redirect()->intended(route('business.dashboard'));
             } else {
                 return redirect()->intended(route('customer.dashboard'));
             }
         }
 
-        return back()->withErrors(['email' => 'The provided credentials do not match our records.']);
+        return back()
+            ->withInput($request->only('email', 'remember'))
+            ->withErrors(['email' => 'The provided credentials do not match our records.']);
     }
 
     public function logout(Request $request)

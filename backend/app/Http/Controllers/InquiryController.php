@@ -44,9 +44,15 @@ class InquiryController extends Controller
 
     public function reply(Request $request, $id)
     {
+        $business = Auth::user()->business;
+        $inquiry = Inquiry::findOrFail($id);
+
+        if (!$business || $inquiry->business_id !== $business->id) {
+            abort(403, 'Unauthorized action: You do not have permission to reply to this inquiry.');
+        }
+
         $request->validate(['reply_message' => 'required|string']);
 
-        $inquiry = Inquiry::findOrFail($id);
         $inquiry->update([
             'reply_message' => $request->reply_message,
             'status' => 'replied',

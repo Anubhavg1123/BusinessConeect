@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Sign In – Business Connect')
 
@@ -19,17 +19,23 @@
                     @csrf
                     <div class="mb-3">
                         <label class="form-label small fw-semibold">Email Address</label>
-                        <input type="email" name="email" class="form-control rounded-3 py-2" required placeholder="admin@businessconnect.com">
+                        <input type="email" name="email" value="{{ old('email') }}" class="form-control rounded-3 py-2 @error('email') is-invalid @enderror" required placeholder="admin@businessconnect.com" autocomplete="email" autofocus>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <label class="form-label small fw-semibold mb-0">Password</label>
                             <a href="#" class="small text-decoration-none">Forgot Password?</a>
                         </div>
-                        <input type="password" name="password" class="form-control rounded-3 py-2" required placeholder="••••••••">
+                        <input type="password" name="password" class="form-control rounded-3 py-2 @error('password') is-invalid @enderror" required placeholder="••••••••" autocomplete="current-password">
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="mb-4 form-check">
-                        <input type="checkbox" name="remember" class="form-check-input" id="rememberCheck">
+                        <input type="checkbox" name="remember" class="form-check-input" id="rememberCheck" {{ old('remember') ? 'checked' : '' }}>
                         <label class="form-check-label small" for="rememberCheck">Remember me on this device</label>
                     </div>
                     <button type="submit" class="btn btn-primary w-100 rounded-pill py-2.5 fw-semibold mb-3">Sign In</button>

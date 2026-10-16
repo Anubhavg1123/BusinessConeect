@@ -1,10 +1,16 @@
 -- ===================================================
+-- Business Connect - Complete InfinityFree MySQL Schema & Seed
+-- Compatible with phpMyAdmin and MySQL 5.7+ / 8.0+ / MariaDB
+-- Default user password for seeded accounts: password123
+-- ===================================================
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ===================================================
 -- Business Connect - Complete MySQL Database Schema
 -- Compatible with MySQL 8.0+ and MariaDB 10.4+
 -- ===================================================
 
-CREATE DATABASE IF NOT EXISTS `business_connect` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `business_connect`;
 
 -- --------------------------------------------------------
 -- Table: roles
@@ -301,23 +307,62 @@ CREATE TABLE IF NOT EXISTS `password_resets` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ===================================================
+
+-- ===================================================
 -- INITIAL SEED DATA
 -- ===================================================
 
-INSERT INTO `roles` (`id`, `name`, `label`) VALUES
-(1, 'admin', 'System Administrator'),
-(2, 'business_owner', 'Business Owner'),
-(3, 'customer', 'Customer');
+INSERT INTO `roles` (`id`, `name`, `label`, `created_at`, `updated_at`) VALUES
+(1, 'admin', 'System Administrator', NOW(), NOW()),
+(2, 'business_owner', 'Business Owner', NOW(), NOW()),
+(3, 'customer', 'Customer', NOW(), NOW())
+ON DUPLICATE KEY UPDATE `label` = VALUES(`label`);
 
-INSERT INTO `users` (`id`, `name`, `email`, `phone`, `password`, `role_id`, `status`) VALUES
-(1, 'System Admin', 'admin@businessconnect.com', '+1-800-555-0199', '$2y$12$Wk0V19b6o.Q9o18Yw5H/y.3h5Vn4B1l7Z9c0t5w1w2e3r4t5y6u7', 1, 'active'),
-(2, 'Alex Carter (Nexus Tech)', 'alex@nexustech.com', '+1-555-0147', '$2y$12$Wk0V19b6o.Q9o18Yw5H/y.3h5Vn4B1l7Z9c0t5w1w2e3r4t5y6u7', 2, 'active'),
-(3, 'Sophia Bennett (Green Leaf)', 'sophia@greenleaf.com', '+1-555-0188', '$2y$12$Wk0V19b6o.Q9o18Yw5H/y.3h5Vn4B1l7Z9c0t5w1w2e3r4t5y6u7', 2, 'active'),
-(4, 'David Miller', 'david.customer@gmail.com', '+1-555-0192', '$2y$12$Wk0V19b6o.Q9o18Yw5H/y.3h5Vn4B1l7Z9c0t5w1w2e3r4t5y6u7', 3, 'active');
+INSERT INTO `users` (`id`, `name`, `email`, `phone`, `password`, `role_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'System Admin', 'admin@businessconnect.com', '+1-800-555-0199', '$2y$10$QNImF6wE3vruBeQVwsfEVeSod6RjklBV0tOQAI/kz98ClhIKw06aK', 1, 'active', NOW(), NOW()),
+(2, 'Alex Carter (Nexus Tech)', 'alex@nexustech.com', '+1-555-0147', '$2y$10$QNImF6wE3vruBeQVwsfEVeSod6RjklBV0tOQAI/kz98ClhIKw06aK', 2, 'active', NOW(), NOW()),
+(3, 'Sophia Bennett (Green Leaf)', 'sophia@greenleaf.com', '+1-555-0188', '$2y$10$QNImF6wE3vruBeQVwsfEVeSod6RjklBV0tOQAI/kz98ClhIKw06aK', 2, 'active', NOW(), NOW()),
+(4, 'David Miller', 'david.customer@gmail.com', '+1-555-0192', '$2y$10$QNImF6wE3vruBeQVwsfEVeSod6RjklBV0tOQAI/kz98ClhIKw06aK', 3, 'active', NOW(), NOW())
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
 
-INSERT INTO `business_categories` (`id`, `name`, `slug`, `icon`, `description`) VALUES
-(1, 'Information Technology', 'technology', 'bi-laptop', 'IT Solutions, Software Development & Cloud Infrastructure'),
-(2, 'Healthcare & Medical', 'healthcare', 'bi-heart-pulse', 'Hospitals, Clinics, Medical Equipment & Wellness'),
-(3, 'Real Estate & Property', 'real-estate', 'bi-building-gear', 'Commercial Properties, Residential & Real Estate Advisory'),
-(4, 'Retail & E-Commerce', 'retail', 'bi-cart-check', 'Consumer Electronics, Apparel & Retail Merchandising'),
-(5, 'Financial Services', 'financial', 'bi-cash-coin', 'Banking, Investment Advisory, Tax & Accounting Solutions');
+INSERT INTO `business_categories` (`id`, `name`, `slug`, `icon`, `description`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Information Technology', 'technology', 'bi-laptop', 'Software development, IT consulting, cloud infrastructure and cybersecurity.', 'active', NOW(), NOW()),
+(2, 'Healthcare & Wellness', 'healthcare', 'bi-heart-pulse', 'Hospitals, clinics, physical therapy, medical diagnostics and wellness centers.', 'active', NOW(), NOW()),
+(3, 'Real Estate & Living', 'real-estate', 'bi-building-gear', 'Commercial properties, luxury apartments, architecture and land development.', 'active', NOW(), NOW()),
+(4, 'Retail & Consumer Goods', 'retail', 'bi-cart-check', 'Electronics, apparel, home decor, lifestyle products and luxury goods.', 'active', NOW(), NOW()),
+(5, 'Financial Services', 'financial', 'bi-cash-coin', 'Banking, investment advisory, tax compliance and accounting solutions.', 'active', NOW(), NOW())
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
+
+INSERT INTO `product_categories` (`id`, `name`, `slug`, `created_at`, `updated_at`) VALUES
+(1, 'Electronics & Gadgets', 'electronics', NOW(), NOW()),
+(2, 'Software Licenses', 'software', NOW(), NOW())
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
+
+INSERT INTO `businesses` (`id`, `user_id`, `category_id`, `name`, `owner_name`, `description`, `gst_number`, `website`, `email`, `phone`, `whatsapp`, `location`, `opening_time`, `closing_time`, `state`, `city`, `address`, `pin_code`, `status`, `views_count`, `created_at`, `updated_at`) VALUES
+(1, 2, 1, 'NexusTech Solutions Ltd', 'Alex Carter', 'NexusTech is an industry-leading software and cloud transformation consulting firm empowering global enterprises.', '27ABCDE1234F1Z5', 'https://nexustech.example.com', 'contact@nexustech.com', '+1-555-0147', '+1-555-0147', 'Tech Park Tower A, San Francisco, CA', '09:00:00', '18:00:00', 'California', 'San Francisco', '100 Silicon Way, Suite 400', '94105', 'approved', 1420, NOW(), NOW()),
+(2, 3, 2, 'Green Leaf Organic Wellness', 'Sophia Bennett', 'Premium organic health supplements, holistic therapy, and eco-friendly wellness products.', '27XYZAB5678G2Z9', 'https://greenleafwellness.example.com', 'hello@greenleaf.com', '+1-555-0188', '+1-555-0188', 'Main Street Plaza, Austin, TX', '08:30:00', '20:00:00', 'Texas', 'Austin', '450 Organic Boulevard', '78701', 'approved', 890, NOW(), NOW())
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
+
+INSERT INTO `products` (`id`, `business_id`, `category_id`, `name`, `description`, `price`, `discount`, `stock`, `sku`, `availability`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 2, 'Enterprise CRM Cloud License', 'Automate sales pipelines, customer relations, and multi-channel marketing campaigns.', 499.00, 10.00, 100, 'NEX-CRM-01', 'in_stock', 'active', NOW(), NOW()),
+(2, 2, 1, 'Organic Hemp Herbal Oil Extract', 'Cold-pressed 100% pure organic hemp oil formula for maximum stress relief and vitality.', 65.00, 5.00, 250, 'GL-HEMP-500', 'in_stock', 'active', NOW(), NOW())
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
+
+INSERT INTO `services` (`id`, `business_id`, `name`, `description`, `price`, `duration`, `availability`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Custom Cloud Infrastructure Audit', 'Complete security audit, cost optimization, and DevOps pipeline setup for AWS / Azure.', 1200.00, '3 Days', 'available', NOW(), NOW()),
+(2, 2, 'Holistic Wellness Consultation', 'Personalized 1-on-1 diet, nutritional evaluation, and lifestyle optimization plan.', 150.00, '60 Minutes', 'available', NOW(), NOW())
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
+
+INSERT INTO `inquiries` (`id`, `customer_id`, `business_id`, `name`, `email`, `phone`, `subject`, `message`, `preferred_contact_time`, `status`, `reply_message`, `replied_at`, `created_at`, `updated_at`) VALUES
+(1, 4, 1, 'David Miller', 'david.customer@gmail.com', '+1-555-0192', 'Quote request for custom CRM implementation', 'Hello, our company has 50 sales reps. We would like a full migration quote to NexusTech CRM.', 'Morning (9 AM - 12 PM)', 'replied', 'Thank you David! Our senior solutions engineer will contact you tomorrow morning.', NOW(), NOW(), NOW())
+ON DUPLICATE KEY UPDATE `subject` = VALUES(`subject`);
+
+INSERT INTO `reviews` (`id`, `customer_id`, `business_id`, `rating`, `review_text`, `status`, `likes_count`, `reported`, `created_at`, `updated_at`) VALUES
+(1, 4, 1, 5, 'Outstanding IT support and cloud migration service. NexusTech saved us over 30% in infrastructure costs!', 'approved', 14, 0, NOW(), NOW())
+ON DUPLICATE KEY UPDATE `review_text` = VALUES(`review_text`);
+
+INSERT INTO `favorites` (`id`, `customer_id`, `business_id`, `created_at`, `updated_at`) VALUES
+(1, 4, 1, NOW(), NOW())
+ON DUPLICATE KEY UPDATE `id` = VALUES(`id`);
+
+SET FOREIGN_KEY_CHECKS=1;

@@ -24,3 +24,7 @@ yarn-error.log
 Thumbs.db
 .vercel
 .env*
+
+*.sqlite
+*.sqlite-journal
+
